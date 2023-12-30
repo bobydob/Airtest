@@ -11,19 +11,19 @@
 	<textures_path path="Content/Textures/" />
 	
 	<imagelist path="new_particle_atlas.imagelist" />
-	<!--<imagelist path="ui_atlas.imagelist" />-->
+	<imagelist path="ui_atlas.imagelist" />
 	<imagelist path="objects.imagelist" />
-	<!--<imagelist path="splash_screen.imagelist" />-->
-	<!--<imagelist path="collectibles.imagelist" />-->
-	<!--<imagelist path="collectible_screen.imagelist" />-->
-	<!--<imagelist path="materials1.imagelist" />-->
-	<!--<imagelist path="materials2.imagelist" />-->
-	<!--<imagelist path="swampy.imagelist" />-->
-	<!--<imagelist path="cranky.imagelist" />-->
-	<!--<imagelist path="bathtubSwampy.imagelist" />-->
-	<!--<imagelist path="world_select_atlas.imagelist" />-->
-	<!--<imagelist path="achievements_atlas.imagelist" />-->
-	<!--<imagelist path="jellycar.imagelist" />-->
+	<imagelist path="splash_screen.imagelist" />
+	<imagelist path="collectibles.imagelist" />
+	<imagelist path="collectible_screen.imagelist" />
+	<imagelist path="materials1.imagelist" />
+	<imagelist path="materials2.imagelist" />
+	<imagelist path="swampy.imagelist" />
+	<imagelist path="cranky.imagelist" />
+	<imagelist path="bathtubSwampy.imagelist" />
+	<imagelist path="world_select_atlas.imagelist" />
+	<imagelist path="achievements_atlas.imagelist" />
+	<imagelist path="jellycar.imagelist" />
 		
 	<material png="Content/Textures/dirt.png" />
 	<material png="Content/Textures/rock.png" />
