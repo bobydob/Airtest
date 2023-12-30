@@ -14,9 +14,9 @@
 	<bUCompanionAdLink>http://disney.go.com/fairies</bUCompanionAdLink>
 	<relatedGamesPlaylist>
 		<!-- <playlistPanelURL>data/playlists/fairygames_playlist.xml</playlistPanelURL> -->					<!-- local -->
-		<playlistPanelURL>http://home.disney.go.com/dxd/dynamic/playlist?id=161429</playlistPanelURL>			<!-- live  -->
+		<playlistPanelURL>https://home.disney.go.com/dxd/dynamic/playlist?id=161429</playlistPanelURL>			<!-- live  -->
 	</relatedGamesPlaylist>
-	<pageURL><![CDATA[http://disney.go.com/games/#/games/play/&content=9724]]></pageURL>
+	<pageURL><![CDATA[https://disney.go.com/games/#/games/play/&content=9724]]></pageURL>
 	<reportingIcon>bitmaps/icons/reporting/log_mtx_gam.png</reportingIcon>
 	<reportingAssetName>wmw_spl_act_wheresmywater</reportingAssetName>
 	<omnitureCategory>dgame</omnitureCategory>
