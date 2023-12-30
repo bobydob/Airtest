@@ -5,9 +5,9 @@
 	<siteLockTextColor>0x000000</siteLockTextColor>
 	<siteLockBackgroundColor>0x4995da</siteLockBackgroundColor>
 	<siteLockRedirectUrl>http://disney.go.com/games</siteLockRedirectUrl>
-	<omnitureTracking>true</omnitureTracking>
+	<omnitureTracking>false</omnitureTracking>
 	<libPathAS3 url="analyticReportingAS3.swf" />
 	<libPathAS2 url="http://disney.go.com/stat/flash/analyticReporting.swf" />
-	<logitTracking>true</logitTracking>
+	<logitTracking>false</logitTracking>
 	<logitUrl>http://apps.dxd.go.com/gemws/logit</logitUrl>
 </config>
