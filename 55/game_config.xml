@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <game_config>
 
-	<loader swf="loader.swf"/>
-	<sounds swf="swfs/sounds.swf"/>
-	<sounds2 swf="swfs/sounds2.swf"/>
-	<content swf="wmw_spl_act_wheresmywater_content.swf"/>
-	<level_container swf="swfs/level_container.swf"/>
+	<loader swf="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/loader.swf"/>
+	<sounds swf="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/swfs/sounds.swf"/>
+	<sounds2 swf="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/swfs/sounds2.swf"/>
+	<content swf="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/wmw_spl_act_wheresmywater_content.swf"/>
+	<level_container swf="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/swfs/level_container.swf"/>
 	
-	<content_path path="Content/" />
-	<textures_path path="Content/Textures/" />
+	<content_path path="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/Content/" />
+	<textures_path path="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/Content/Textures/" />
 	
-	<imagelist path="new_particle_atlas.imagelist" />
+	<imagelist path="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/new_particle_atlas.imagelist" />
 	<!--<imagelist path="ui_atlas.imagelist" />-->
-	<imagelist path="objects.imagelist" />
+	<imagelist path="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/objects.imagelist" />
 	<!--<imagelist path="splash_screen.imagelist" />-->
 	<!--<imagelist path="collectibles.imagelist" />-->
 	<!--<imagelist path="collectible_screen.imagelist" />-->
@@ -25,23 +25,23 @@
 	<!--<imagelist path="achievements_atlas.imagelist" />-->
 	<!--<imagelist path="jellycar.imagelist" />-->
 		
-	<material png="Content/Textures/dirt.png" />
-	<material png="Content/Textures/rock.png" />
-	<material png="Content/Textures/rockshadow.png" />
-	<material png="Content/Textures/rockhilight.png" />		
-	<material png="Content/Textures/bricks.png" />			
+	<material png="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/Content/Textures/dirt.png" />
+	<material png="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/Content/Textures/rock.png" />
+	<material png="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/Content/Textures/rockshadow.png" />
+	<material png="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/Content/Textures/rockhilight.png" />		
+	<material png="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/Content/Textures/bricks.png" />			
 	
-	<room png="Content/Textures/room-HD.png" />		
-	<room_overlay png="Content/Textures/room_overlay-HD.png" />	
-	<endcap_bottom png="Content/Textures/Endcap-01-HD.jpg" />
-	<endcap png="Content/Textures/level_end_cap.jpg" />
+	<room png="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/Content/Textures/room-HD.png" />		
+	<room_overlay png="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/Content/Textures/room_overlay-HD.png" />	
+	<endcap_bottom png="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/Content/Textures/Endcap-01-HD.jpg" />
+	<endcap png="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/Content/Textures/level_end_cap.jpg" />
 	
-	<material png="Content/Textures/water_alpha.png" />		
-	<material png="Content/Textures/water_color.png" />		
-	<material png="Content/Textures/water_color_ooze.png" />		
+	<material png="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/Content/Textures/water_alpha.png" />		
+	<material png="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/Content/Textures/water_color.png" />		
+	<material png="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/Content/Textures/water_color_ooze.png" />		
 	
-	<swampy swf="swfs/swampy.swf"/>		
-	<cranky swf="swfs/cranky.swf"/>		
+	<swampy swf="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/swfs/swampy.swf"/>		
+	<cranky swf="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/swfs/cranky.swf"/>		
 		
 	<level_1 png="Content/Levels/first_dig.png" xml="Content/Levels/first_dig.xml"/>
 	<level_2 png="Content/Levels/hard_rock.png" xml="Content/Levels/hard_rock.xml"/>
@@ -56,10 +56,10 @@
 	
 	<level_11 png="Content/Levels/another_castle.png" xml="Content/Levels/another_castle.xml"/>	
 	
-	<show_logo png="images/show_logo.png"/>
-	<game_logo png="images/game_logo.png"/>
+	<show_logo png="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/images/show_logo.png"/>
+	<game_logo png="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/images/game_logo.png"/>
 	
-	<strings xml="strings/strings.xml"/>
+	<strings xml="https://cdn.jsdelivr.net/gh/bobydob/Airtest@070060cd916120d562ac14bdef1d7ca0a4fe6442/55/strings/strings.xml"/>
 
 	<!--  Loads the external fonts swf. Any special fonts specified in strings.xml need to be embedded inside it. -->	
 	
