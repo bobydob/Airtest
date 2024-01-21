@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+<ModulePrefs title="Feudalism 3" />
+<Content type="html"><![CDATA[
+
+<object xmlns="http://www.w3.org/1999/xhtml" 
+data="https://images-docs-opensocial.googleusercontent.com/gadgets/proxy?container=fbk&url=https://sda.4399.com/4399swf/upload_swf/ftp13/weijianp/20131107/061.swf" 
+height="100%" type="application/x-shockwave-flash" width="100%"><param name="movie" value="" />
+</object><script src="https://cdn.jsdelivr.net/npm/@ruffle-rs/ruffle@0.1.0-nightly.2024.1.8/ruffle.js"></script>
+<script src="https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/addc4348-16c2-4645-9dff-f99b962e39ef%2Fscr.js"></script>
+
+]]></Content>
+</Module>
