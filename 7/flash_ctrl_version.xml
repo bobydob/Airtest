@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resInfos>
-	<info resName="zwsf">https://cdn.jsdelivr.net/gh/bobydob/Airtest@master/7/zwsf2-3.gif?20120719</info>
-	<info resName="ctrl">https://cdn.jsdelivr.net/gh/bobydob/Airtest@master/7/ctrl_mo_v4.swf?20200601</info>
-	<info resName="ads">https://cdn.jsdelivr.net/gh/bobydob/Airtest@master/7/A4399dv_base.swf?20200520</info>
-	<info resName="ctrl_v5">https://cdn.jsdelivr.net/gh/bobydob/Airtest@master/7/ctrl_mo_v5.swf?20200601</info>
-    <info resName="tools_as3">https://cdn.jsdelivr.net/gh/bobydob/Airtest@master/7/open4399tools_AS3.swf?20230725</info>
-	<!-- <info resName="tools_as3">https://cdn.comment.4399pk.com/control/open4399tools_AS3.swf?20130617</info> -->
-</resInfos>
