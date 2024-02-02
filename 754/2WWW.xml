@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+<ModulePrefs title="Must Pop Words" />
+<Content type="html"><![CDATA[
+
+<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+<script>
+window.RufflePlayer = window.RufflePlayer || {};
+window.RufflePlayer.config = {
+"autoplay": "off","splashScreen": false,"unmuteOverlay": "hidden","quality": "high" };
+window.addEventListener("load", (event) => {
+const ruffle = window.RufflePlayer.newest();
+const player = ruffle.createPlayer();
+const container = document.getElementById("container");
+container.appendChild(player);
+player.load("https://feedback.googleusercontent.com/gadgets/proxy?container=fbk&url=https://archive.org/download/flash_meandthekey/meandthekey.swf");
+player.style.width = "100%";
+player.style.height = "100%";
+});
+</script><div id="container"></div>
+
+]]></Content>
+</Module>
