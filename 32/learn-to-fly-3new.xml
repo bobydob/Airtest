@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+<ModulePrefs title="Learn to Fly 3" />
+<Content type="html"><![CDATA[
+
+<center>
+<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+<script>
+window.RufflePlayer = window.RufflePlayer || {};
+window.RufflePlayer.config = {
+"autoplay": "off",letterbox: "on","splashScreen": true,"unmuteOverlay": "hidden","quality": "low" };
+window.addEventListener("load", (event) => {
+const ruffle = window.RufflePlayer.newest();
+const player = ruffle.createPlayer();
+const container = document.getElementById("container");
+container.appendChild(player);
+player.load("https://cdn.jsdelivr.net/gh/Magixxz/embeds@a9ae99acf7e9feb974b973c9331282ae025754ce/Learn-To-Fly-3.swf");
+player.style.width = "100%";
+player.style.height = "100%";
+});
+</script><div id="container"></div>
+</center>
+<script src="https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/addc4348-16c2-4645-9dff-f99b962e39ef%2Fscr.js"></script>
+
+]]></Content>
+</Module>
