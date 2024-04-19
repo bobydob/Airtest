@@ -10,5 +10,5 @@ var getHeight 	= VIDEO_OPTIONS.height;
 var getWidth 	= VIDEO_OPTIONS.width;
 var getColor 	= VIDEO_OPTIONS.color;
 var getAds 		= true;
-var apndwalkthrough = '<style type="text/css">#gamemonetize-video, #gamemonetize-walkthrough { width:' + getWidth + '; height:' + getHeight + '; }</style><iframe id="gamemonetize-walkthrough" style="border-radius: 5px;" src="https://images-opensocial.googleusercontent.com/gadgets/ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/9ecda005-11e9-4b52-ab9e-700b4d46d00f%2Fminep.xml&container=ig=' + getDomain + '&gameid=' + encodeURIComponent(gameId) + '&game=' + encodeURIComponent(gameName) + '&getads=' + encodeURIComponent(getAds) + '&color=' + encodeURIComponent(getColor) + '" scrolling="no" frameborder="0" allowfullscreen="allowfullscreen"></iframe>';
+var apndwalkthrough = '<style type="text/css">#gamemonetize-video, #gamemonetize-walkthrough { width:' + getWidth + '; height:' + getHeight + '; }</style><iframe id="gamemonetize-walkthrough" style="border-radius: 5px;" src="https://images-opensocial.googleusercontent.com/gadgets/ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/9ecda005-11e9-4b52-ab9e-700b4d46d00f%2Fminep.xml&container=ig" scrolling="no" frameborder="0" allowfullscreen="allowfullscreen"></iframe>';
 $('#gamemonetize-video').append(apndwalkthrough);
