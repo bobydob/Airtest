@@ -6,7 +6,7 @@ function showGame() {
 		dataUrl: buildUrl + "/WebGL.data.unityweb",
         frameworkUrl: buildUrl + "/WebGL.framework.js.unityweb",
         codeUrl: buildUrl + "/WebGL.wasm.unityweb",
-        streamingAssetsUrl: "https://cdn.jsdelivr.net/gh/bobydob/Airtest@master/5633/StreamingAssets",
+        streamingAssetsUrl: "https://cdn.jsdelivr.net/gh/bobydob/Airtest@c60e48c80aa7f05a8778959e8338d4e8477743cf/5633/StreamingAssets",
         companyName: "JustPlay.LOL",
         productName: "1v1.LOL",
         productVersion: "4.0",
