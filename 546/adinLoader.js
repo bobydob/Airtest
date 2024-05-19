@@ -1,0 +1,1 @@
+const getAdinDomain = 'https://cdn.jsdelivr.net/gh/bobydob/Airtest@master/546/adinGameLoader.js';
