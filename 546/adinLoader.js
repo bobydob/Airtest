@@ -1,1 +1,1 @@
-const getAdinDomain = 'https://cdn.jsdelivr.net/gh/bobydob/Airtest@bb74a2360f4d0fbbd94bc66275a41f46f6a0371d/546/adinGameLoader.js';
+const getAdinDomain = 'https://cdn.jsdelivr.net/gh/bobydob/Airtest@5f88a8088c77fd4be188aff010d085ce8c8f9068/546/adinGameLoader.js';
