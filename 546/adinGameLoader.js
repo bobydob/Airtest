@@ -1,6 +1,6 @@
 const headTag = document.getElementsByTagName('head')[0];
 
-const styleLink = 'https://lablockedgames.com/preroll/style.css';
+const styleLink = 'https://cdn.jsdelivr.net/gh/bobydob/Airtest@master/546/style.css';
 
 const myAdsCode = document.createElement('div');
 myAdsCode.style.cssText = 'position:absolute;z-index:9999;background-color:black;color:lightyellow;width:100%;height:100%;padding:0;margin:0';
