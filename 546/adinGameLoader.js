@@ -52,7 +52,7 @@ startGame.addEventListener("click", function(event){
     event.preventDefault()
 });
 
-let sites = Array("https://lablockedgames.com", "https://script.google.com", "https://frivwtf.com", "https://playslopefun.com", "https://unblockeds-games.com", "https://ezpzunblockedgames.com", "https://unblockedgamesgg.com", "https://clicker-games.com", "https://friv.guru", "https://retrobowl.fun", "https://unblocked66world.com", "https://1v1lolunblocked.com", "https://bestofgooglesites.com");
+let sites = Array("https://lablockedgames.com", "https://script.google.com", "https://cdn.jsdelivr.net/", "https://playslopefun.com", "https://unblockeds-games.com", "https://ezpzunblockedgames.com", "https://unblockedgamesgg.com", "https://clicker-games.com", "https://friv.guru", "https://retrobowl.fun", "https://unblocked66world.com", "https://1v1lolunblocked.com", "https://bestofgooglesites.com");
 
 startGame.onclick = function() {
     adsCode.style.cssText = 'display:none;background-color:black;color:lightyellow;width:100%;height:100%';
