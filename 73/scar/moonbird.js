@@ -1,44 +1,37 @@
 var Module = typeof Module != "undefined" ? Module : {};
 
-// Перехват fetch для изменения URL data.binc и mp3
 var originalFetch = fetch;
 
 fetch = function(resource, init) {
     if (typeof resource === "string") {
         if (resource.endsWith("data.binc")) {
-            console.log("Перехват fetch запроса к data.binc, замена на ваш URL");
-            resource = "https://cdn.jsdelivr.net/gh/bobydob/Airtest@master/73/scar/data.binc"; // Ваш URL для data.binc
+            resource = "https://cdn.jsdelivr.net/gh/bobydob/Airtest@master/73/scar/data.binc"; 
         } else if (resource.endsWith(".mp3")) {
-            console.log("Перехват fetch запроса к MP3 файлу, замена на ваш URL");
-            resource = "https://cdn.jsdelivr.net/gh/bobydob/Airtest@master/73/scar/" + resource.split("/").pop(); // Ваш URL для mp3
+            resource = "https://cdn.jsdelivr.net/gh/bobydob/Airtest@master/73/scar/" + resource.split("/").pop(); 
         }
     }
     return originalFetch(resource, init);
 };
 
-// Перехват XMLHttpRequest для изменения URL data.binc и mp3
 var originalOpen = XMLHttpRequest.prototype.open;
 
 XMLHttpRequest.prototype.open = function(method, url) {
     if (typeof url === "string") {
         if (url.endsWith("data.binc")) {
-            console.log("Перехват XMLHttpRequest для data.binc, замена на ваш URL");
-            url = "https://cdn.jsdelivr.net/gh/bobydob/Airtest@master/73/scar/data.binc"; // Ваш URL для data.binc
+            url = "https://cdn.jsdelivr.net/gh/bobydob/Airtest@master/73/scar/data.binc"; 
         } else if (url.endsWith(".mp3")) {
-            console.log("Перехват XMLHttpRequest для MP3 файла, замена на ваш URL");
-            url = "https://cdn.jsdelivr.net/gh/bobydob/Airtest@master/73/scar/" + url.split("/").pop(); // Ваш URL для mp3
+            url = "https://cdn.jsdelivr.net/gh/bobydob/Airtest@master/73/scar/" + url.split("/").pop(); 
         }
     }
     return originalOpen.apply(this, arguments);
 };
 
-// Функция locateFile для других файлов
 Module["locateFile"] = function (path, scriptDirectory) {
     if (path === "moonbird.wasm") {
-        return "https://cdn.jsdelivr.net/gh/bobydob/Airtest@master/73/scar/moonbird.wasm"; // Ваш URL
+        return "https://cdn.jsdelivr.net/gh/bobydob/Airtest@master/73/scar/moonbird.wasm"; 
     }
     if (path === "data.binc") {
-        return "https://cdn.jsdelivr.net/gh/bobydob/Airtest@master/73/scar/data.binc"; // Ваш URL
+        return "https://cdn.jsdelivr.net/gh/bobydob/Airtest@master/73/scar/data.binc"; 
     }
     return scriptDirectory + path;
 };
