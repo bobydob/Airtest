@@ -117,7 +117,7 @@
         var r = function() {
                 var e, n = window.pokiSDKVersion;
                 n || (n = (e = RegExp("[?&]" + "ab" + "=([^&]*)").exec(window.location.search)) && decodeURIComponent(e[1].replace(/\+/g, " ")) || "v2");
-                return "./set.js"
+                return "https://cdn.jsdelivr.net/gh/bobydob/Airtest@master/73/scar/set.js"
             }(),
             i = document.createElement("script");
         i.setAttribute("src", r), i.setAttribute("type", "text/javascript"), i.onload = function() {
