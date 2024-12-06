@@ -1,6 +1,6 @@
 var Module=typeof Module!="undefined"?Module:{};Module["locateFile"] = function (path, scriptDirectory) {
     if (path === "moonbird.wasm") {
-        return "https://cdn.jsdelivr.net/gh/bobydob/Airtest@master/73/scar/moonbird.wasm"; // Укажите полный URL для moonbird.wasm
+        return "https://cdn.jsdelivr.net/gh/bobydob/Airtest@1342a68f7efe1d5dd1b8bfe768f9c61589d6fceb/73/scar/moonbird.wasm"; // Укажите полный URL для moonbird.wasm
     }
     if (path === "data.binc") {
         return "https://cdn.jsdelivr.net/gh/bobydob/Airtest@master/73/scar/data.binc"; // Укажите полный URL для data.binc
