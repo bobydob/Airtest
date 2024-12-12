@@ -74,20 +74,16 @@
             }
         </style>
 		
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+		
+		<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
 <script type="text/javascript">
     window.SDK_OPTIONS = {
         gameId: "r2tzpy9cgrn2u4xgzc9z0zbtvxm16mby",
         onEvent: function(a) {
             switch (a.name) {
                 case "SDK_GAME_PAUSE":
-                    // pause game logic / mute audio
-                    break;
                 case "SDK_GAME_START":
-                    // advertisement done, resume game logic and unmute audio
-                    break;
                 case "SDK_READY":
-                    // when sdk is ready
                     break;
             }
         }
@@ -97,25 +93,20 @@
         var d = a.getElementsByTagName(b)[0];
         a.getElementById(c) || (a = a.createElement(b), a.id = c, a.src = "https://cdn.jsdelivr.net/gh/st39/sdk@main/sdkjs.js", d.parentNode.insertBefore(a, d))
     })(document, "script", "gamemonetize-sdk");
-</script>
 
-<script type="text/javascript">
     let isAdShown = false;
 
     function onClick(e) {
         if (!isAdShown && typeof sdk !== 'undefined' && typeof sdk.showBanner === 'function') {
-            sdk.showBanner();  // Показываем рекламу
-            isAdShown = true;   // Устанавливаем флаг, что реклама показана
+            sdk.showBanner();
+            isAdShown = true;
         }
 
-        // Здесь не удаляем обработчик клика, чтобы кликать дальше
-        // Убедимся, что функция init() вызывается только один раз
         if (typeof init === 'function' && !isAdShown) {
-            init();  // Выполняем инициализацию игры
+            init();
         }
     }
 
-    // Обработчик клика добавляется один раз
     window.addEventListener("click", onClick);
 </script>
 
