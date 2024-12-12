@@ -126,67 +126,53 @@
     })();
 </script>
 
-(function () {
-    // Флаг, чтобы избежать повторного показа рекламы
-    let isAdShown = false;
-
-    // Проверяем, доступен ли объект Promise
-    if (typeof Promise === "undefined") {
-        console.error("Promise не поддерживается в этом окружении. Проверьте другие SDK.");
-        return;
-    }
-
-    // Настройки SDK
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+<script type="text/javascript">
     window.SDK_OPTIONS = {
         gameId: "r2tzpy9cgrn2u4xgzc9z0zbtvxm16mby",
-        onEvent: function (event) {
-            switch (event.name) {
+        onEvent: function(a) {
+            switch (a.name) {
                 case "SDK_GAME_PAUSE":
-                    console.log("Игра на паузе.");
+                    // pause game logic / mute audio
                     break;
                 case "SDK_GAME_START":
-                    console.log("Игра возобновлена.");
+                    // advertisement done, resume game logic and unmute audio
                     break;
                 case "SDK_READY":
-                    console.log("Рекламный SDK готов.");
+                    // when sdk is ready
                     break;
             }
-        },
+        }
     };
 
-    // Функция для загрузки вашего SDK
-    function loadAdSDK() {
-        let script = document.createElement("script");
-        script.src = "https://cdn.jsdelivr.net/gh/st39/sdk@main/sdkjs.js";
-        script.id = "gamemonetize-sdk";
-        script.onload = function () {
-            console.log("Рекламный SDK загружен.");
-        };
-        script.onerror = function () {
-            console.error("Не удалось загрузить рекламный SDK.");
-        };
-        document.head.appendChild(script);
-    }
+    (function(a, b, c) {
+        var d = a.getElementsByTagName(b)[0];
+        a.getElementById(c) || (a = a.createElement(b), a.id = c, a.src = "https://cdn.jsdelivr.net/gh/st39/sdk@main/sdkjs.js", d.parentNode.insertBefore(a, d))
+    })(document, "script", "gamemonetize-sdk");
+</script>
 
-    // Управление первым кликом
-    function handleFirstClick() {
-        if (!isAdShown) {
-            isAdShown = true;
-            if (typeof sdk !== "undefined" && typeof sdk.showBanner === "function") {
-                sdk.showBanner();
-                console.log("Реклама показана.");
-            } else {
-                console.warn("SDK не инициализирован или showBanner недоступен.");
-            }
+<script type="text/javascript">
+    let isAdShown = false;
+
+    // Функция, которая будет показывать рекламу только один раз
+    function onClick(e) {
+        if (!isAdShown && typeof sdk !== 'undefined' && typeof sdk.showBanner === 'function') {
+            sdk.showBanner();  // Показываем рекламу
+            isAdShown = true;  // Обновляем флаг, чтобы реклама не показывалась снова
+        }
+
+        // Удаляем обработчик клика, чтобы не было лишних вызовов
+        window.removeEventListener("click", onClick); 
+        
+        // Запускаем начальную инициализацию игры
+        if (typeof init === 'function') {
+            init();  // Инициализируем игру, если функция init существует
         }
     }
 
-    // Ждём загрузки DOM и инициализируем SDK
-    document.addEventListener("DOMContentLoaded", function () {
-        loadAdSDK();
-        window.addEventListener("click", handleFirstClick, { once: true }); // Устанавливаем обработчик на первый клик
-    });
-})();
+    // Обработчик клика по экрану
+    window.addEventListener("click", onClick);
+</script>
 
 
 
