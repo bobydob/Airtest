@@ -76,6 +76,7 @@
     </head>
 
     <body>
+	
         <div class="gm4html5_div_class" id="gm4html5_div_id">
         <img src="https://274079163-174037128449362058.preview.editmysite.com/uploads/b/139890129-899796311729593176/files/html5game/splash.png" id="GM4HTML5_loadingscreen" alt="GameMaker:HTML5 loading screen" style="display:none;"/>
             <!-- Create the canvas element the game draws to -->
@@ -88,6 +89,7 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/es6-promise/dist/es6-promise.auto.min.js"></script> <!-- Полифилл для Promise -->
 <script type="text/javascript">
     window.SDK_OPTIONS = {
         gameId: "r2tzpy9cgrn2u4xgzc9z0zbtvxm16mby",
@@ -125,7 +127,10 @@
     // Обработка клика
     function onClick(e) {
         showAd();
-        init(); // Логика вашей игры
+        // Вызов инициализации игры, если функция init определена
+        if (typeof init === "function") {
+            init();
+        }
     }
 
     // Отслеживание загрузки страницы
@@ -174,6 +179,7 @@
     });
 })();
 </script>
+
 
 <script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js"></script>
     </body>
