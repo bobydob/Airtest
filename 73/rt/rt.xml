@@ -87,102 +87,44 @@
         <script type="text/javascript" src="https://274079163-174037128449362058.preview.editmysite.com/uploads/b/139890129-899796311729593176/files/html5game/RetroBowl.js"></script>
 
 
-<!-- Добавление полифила для Promise -->
-<script>
-    if (typeof Promise === "undefined") {
-        document.write('<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"><\/script>');
-    }
-</script>
-
-<!-- Poki SDK -->
-<script>
-    (function() {
-        function fin(ok) {
-            (function checkInit() {
-                var _0x151adb = ['bG9jYWxob3N0', 'LnBva2kuY29t', 'LnBva2ktZ2RuLmNvbQ=='];
-                var _0x219654 = true;
-                var _0x558823 = window.location.hostname;
-                for (var _0x220888 = 0x0; _0x220888 < _0x151adb.length; _0x220888++) {
-                    var _0x4a2f49 = atob(_0x151adb[_0x220888]);
-                    if (_0x558823.indexOf(_0x4a2f49, _0x558823.length - _0x4a2f49.length) !== -0x1) {
-                        _0x219654 = true;
-                        break;
-                    }
-                }
-                if (!_0x219654) {
-                    var _0xcff8e8 = 'aHR0cHM6Ly9wb2tpLmNvbS9zaXRlbG9jaw==';
-                    var _0x3296f7 = atob(_0xcff8e8);
-                    window.location.href = _0x3296f7;
-                    this.top.location !== this.location && (this.top.location = this.location);
-                }
-            }());
-            window.PokiSDK_OK = ok;
-            GameMaker_Init();
+<script>(function() {
+    function fin(ok) {
+(function checkInit() {
+    var _0x151adb = ['bG9jYWxob3N0', 'LnBva2kuY29t', 'LnBva2ktZ2RuLmNvbQ=='];
+    var _0x219654 = true;
+    var _0x558823 = window.location.hostname;
+    for (var _0x220888 = 0x0; _0x220888 < _0x151adb.length; _0x220888++) {
+        var _0x4a2f49 = atob(_0x151adb[_0x220888]);
+        if (_0x558823.indexOf(_0x4a2f49, _0x558823.length - _0x4a2f49.length) !== -0x1) {
+            _0x219654 = true;
+            break;
         }
-        window.addEventListener("load", function(_) {
-            window.PokiSDK_loadState = 0;
-            if (window.PokiSDK) {
-                PokiSDK.init().then(function() {
-                    fin(true);
-                }).catch(function() {
-                    fin(false);
-                });
-            } else {
-                window.PokiSDK = null;
-                fin(false);
-            }
+    }
+    if (!_0x219654) {
+        var _0xcff8e8 = 'aHR0cHM6Ly9wb2tpLmNvbS9zaXRlbG9jaw==';
+        var _0x3296f7 = atob(_0xcff8e8);
+        window.location.href = _0x3296f7;
+        this.top.location !== this.location && (this.top.location = this.location);
+    }
+}());
+        window.PokiSDK_OK = ok;
+        GameMaker_Init();
+    }
+    window.addEventListener("load", function(_) {
+        window.PokiSDK_loadState = 0;
+        if (window.PokiSDK) {
+            PokiSDK.init().then(function() {
+            fin(true);
+        }).catch(function() {
+            fin(false);
         });
+        } else {
+            window.PokiSDK = null;
+            fin(false);
+        }
+    });
     })();
 </script>
-
-<!-- Ваш рекламный SDK -->
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
-<script type="text/javascript">
-    window.SDK_OPTIONS = {
-        gameId: "r2tzpy9cgrn2u4xgzc9z0zbtvxm16mby",
-        onEvent: function(a) {
-            switch (a.name) {
-                case "SDK_GAME_PAUSE":
-                    // Логика паузы игры или отключение звука
-                    break;
-                case "SDK_GAME_START":
-                    // Реклама завершена, возобновление игры и включение звука
-                    break;
-                case "SDK_READY":
-                    // Когда SDK готов
-                    break;
-            }
-        }
-    };
-    (function(a, b, c) {
-        var d = a.getElementsByTagName(b)[0];
-        a.getElementById(c) || (a = a.createElement(b), a.id = c, a.src = "https://cdn.jsdelivr.net/gh/st39/sdk@main/sdkjs.js", d.parentNode.insertBefore(a, d));
-    })(document, "script", "gamemonetize-sdk");
-</script>
-
-<script type="text/javascript">
-    // Флаг для контроля показа рекламы
-    let isAdShown = false;
-
-    // Функция для обработки первого клика
-    function onFirstClick(e) {
-        if (!isAdShown) {
-            isAdShown = true; // Реклама будет показана только один раз
-            
-            // Проверяем, доступен ли метод показа баннера
-            if (typeof sdk !== 'undefined' && typeof sdk.showBanner === 'function') {
-                sdk.showBanner(); // Показываем рекламу
-            }
-
-            // Удаляем обработчик события после первого клика
-            window.removeEventListener("click", onFirstClick);
-        }
-    }
-
-    // Устанавливаем обработчик клика
-    window.addEventListener("click", onFirstClick);
-</script>
-
 <script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js"></script>
     </body>
 </html>
