@@ -87,6 +87,14 @@
         <script type="text/javascript" src="https://274079163-174037128449362058.preview.editmysite.com/uploads/b/139890129-899796311729593176/files/html5game/RetroBowl.js"></script>
 
 
+<!-- Добавление полифила для Promise -->
+<script>
+    if (typeof Promise === "undefined") {
+        document.write('<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"><\/script>');
+    }
+</script>
+
+<!-- Poki SDK -->
 <script>
     (function() {
         function fin(ok) {
@@ -174,6 +182,7 @@
     // Устанавливаем обработчик клика
     window.addEventListener("click", onFirstClick);
 </script>
+
 <script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js"></script>
     </body>
 </html>
