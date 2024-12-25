@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+<ModulePrefs title="Must Pop Words" />
+<Content type="html"><![CDATA[
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог игр</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f8f9fa;
+            color: #333;
+        }
+        header {
+            background: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.5em;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        main {
+            padding: 20px;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .search-input {
+            padding: 10px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .alphabet-filter {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+        .alphabet-filter button {
+            padding: 8px 12px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .alphabet-filter button:hover {
+            background: #0056b3;
+        }
+        .game-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .game-list li {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .game-list li:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        .game-list li a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        .game-list li a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>Каталог игр</header>
+    <main>
+        <div class="controls">
+            <input type="text" id="search" class="search-input" placeholder="Поиск игр...">
+            <div class="alphabet-filter" id="alphabet-filter">
+                <!-- Кнопки алфавита будут добавлены через JavaScript -->
+            </div>
+        </div>
+        <ul class="game-list" id="game-list">
+            <!-- Игры будут добавлены через JavaScript -->
+        </ul>
+    </main>
+    <script>
+        // Массив игр с их ссылками
+        const games = [
+            { name: "Among Us", url: "https://images-opensocial.googleusercontent.com/gadgets/ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "games/angry-birds/index.html" },
+            { name: "Call of Duty", url: "games/call-of-duty/index.html" },
+            { name: "Chess Master", url: "games/chess-master/index.html" },
+            { name: "Fortnite", url: "games/fortnite/index.html" },
+            { name: "Minecraft", url: "games/minecraft/index.html" },
+            { name: "Pac-Man", url: "games/pac-man/index.html" },
+            { name: "PUBG", url: "games/pubg/index.html" },
+            { name: "Roblox", url: "games/roblox/index.html" },
+            { name: "The Sims", url: "games/the-sims/index.html" },
+            { name: "Tetris", url: "games/tetris/index.html" },
+            { name: "Zelda: Breath of the Wild", url: "games/zelda/index.html" }
+        ];
+
+        const gameList = document.getElementById('game-list');
+        const searchInput = document.getElementById('search');
+        const alphabetFilter = document.getElementById('alphabet-filter');
+
+        // Функция отображения списка игр
+        function displayGames(filter = '') {
+            const filteredGames = games.filter(game => game.name.toLowerCase().startsWith(filter.toLowerCase()));
+            gameList.innerHTML = filteredGames.map(game => `<li><a href="${game.url}">${game.name}</a></li>`).join('');
+        }
+
+        // Добавляем кнопки алфавита
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(letter => {
+            const button = document.createElement('button');
+            button.textContent = letter;
+            button.onclick = () => displayGames(letter);
+            alphabetFilter.appendChild(button);
+        });
+
+        // Фильтрация по поисковому запросу
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase();
+            const filteredGames = games.filter(game => game.name.toLowerCase().includes(query));
+            gameList.innerHTML = filteredGames.map(game => `<li><a href="${game.url}">${game.name}</a></li>`).join('');
+        });
+
+        // Изначально отображаем все игры
+        displayGames();
+    </script>
+</body>
+</html>
+
+
+]]></Content>
+</Module>
