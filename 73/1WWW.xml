@@ -16,6 +16,9 @@
             padding: 0;
             background: #f8f9fa;
             color: #333;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
         }
         header {
             background: #007bff;
@@ -26,7 +29,15 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         main {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+        .game-catalog {
             padding: 20px;
+            overflow-y: auto;
+            flex-grow: 1;
         }
         .controls {
             display: flex;
@@ -73,33 +84,50 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             text-align: center;
             transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
         }
         .game-list li:hover {
             transform: scale(1.05);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
-        .game-list li a {
-            text-decoration: none;
-            color: #007bff;
-            font-weight: bold;
+        #game-frame {
+            flex-grow: 1;
+            border: none;
+            width: 100%;
+            display: none;
         }
-        .game-list li a:hover {
-            text-decoration: underline;
+        #back-button {
+            padding: 10px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin: 20px;
+            cursor: pointer;
+            align-self: flex-start;
+            display: none;
+        }
+        #back-button:hover {
+            background: #b02a37;
         }
     </style>
 </head>
 <body>
     <header>Каталог игр</header>
     <main>
-        <div class="controls">
-            <input type="text" id="search" class="search-input" placeholder="Поиск игр...">
-            <div class="alphabet-filter" id="alphabet-filter">
-                <!-- Кнопки алфавита будут добавлены через JavaScript -->
+        <div id="game-catalog" class="game-catalog">
+            <div class="controls">
+                <input type="text" id="search" class="search-input" placeholder="Поиск игр...">
+                <div class="alphabet-filter" id="alphabet-filter">
+                    <!-- Кнопки алфавита будут добавлены через JavaScript -->
+                </div>
             </div>
+            <ul class="game-list" id="game-list">
+                <!-- Игры будут добавлены через JavaScript -->
+            </ul>
         </div>
-        <ul class="game-list" id="game-list">
-            <!-- Игры будут добавлены через JavaScript -->
-        </ul>
+        <iframe id="game-frame"></iframe>
+        <button id="back-button">Назад к каталогу</button>
     </main>
     <script>
         // Массив игр с их ссылками
@@ -108,24 +136,25 @@
             { name: "Angry Birds", url: "games/angry-birds/index.html" },
             { name: "Call of Duty", url: "games/call-of-duty/index.html" },
             { name: "Chess Master", url: "games/chess-master/index.html" },
-            { name: "Fortnite", url: "games/fortnite/index.html" },
             { name: "Minecraft", url: "games/minecraft/index.html" },
             { name: "Pac-Man", url: "games/pac-man/index.html" },
             { name: "PUBG", url: "games/pubg/index.html" },
-            { name: "Roblox", url: "games/roblox/index.html" },
-            { name: "The Sims", url: "games/the-sims/index.html" },
-            { name: "Tetris", url: "games/tetris/index.html" },
-            { name: "Zelda: Breath of the Wild", url: "games/zelda/index.html" }
+            { name: "Roblox", url: "games/roblox/index.html" }
         ];
 
         const gameList = document.getElementById('game-list');
         const searchInput = document.getElementById('search');
         const alphabetFilter = document.getElementById('alphabet-filter');
+        const gameCatalog = document.getElementById('game-catalog');
+        const gameFrame = document.getElementById('game-frame');
+        const backButton = document.getElementById('back-button');
 
         // Функция отображения списка игр
         function displayGames(filter = '') {
             const filteredGames = games.filter(game => game.name.toLowerCase().startsWith(filter.toLowerCase()));
-            gameList.innerHTML = filteredGames.map(game => `<li><a href="${game.url}">${game.name}</a></li>`).join('');
+            gameList.innerHTML = filteredGames.map(game => `
+                <li data-url="${game.url}">${game.name}</li>
+            `).join('');
         }
 
         // Добавляем кнопки алфавита
@@ -140,7 +169,28 @@
         searchInput.addEventListener('input', () => {
             const query = searchInput.value.toLowerCase();
             const filteredGames = games.filter(game => game.name.toLowerCase().includes(query));
-            gameList.innerHTML = filteredGames.map(game => `<li><a href="${game.url}">${game.name}</a></li>`).join('');
+            gameList.innerHTML = filteredGames.map(game => `
+                <li data-url="${game.url}">${game.name}</li>
+            `).join('');
+        });
+
+        // Клик по игре
+        gameList.addEventListener('click', event => {
+            if (event.target.tagName === 'LI') {
+                const url = event.target.getAttribute('data-url');
+                gameFrame.src = url;
+                gameFrame.style.display = 'block';
+                backButton.style.display = 'block';
+                gameCatalog.style.display = 'none';
+            }
+        });
+
+        // Кнопка "Назад"
+        backButton.addEventListener('click', () => {
+            gameFrame.style.display = 'none';
+            backButton.style.display = 'none';
+            gameCatalog.style.display = 'block';
+            gameFrame.src = ''; // Очищаем iframe
         });
 
         // Изначально отображаем все игры
