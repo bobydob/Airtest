@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+<ModulePrefs title="Must Pop Words" />
+<Content type="html"><![CDATA[
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог игр</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #e9ecef; color: #333; display: flex; flex-direction: column; height: 100vh; }
+        header { background: #007bff; color: white; padding: 20px; text-align: center; font-size: 1.5em; cursor: default; }
+        main { display: flex; flex-direction: column; flex-grow: 1; overflow: hidden; }
+        .controls { text-align: center; margin-bottom: 20px; }
+        .search-input { padding: 10px; width: 100%; max-width: 400px; border: 1px solid #ccc; border-radius: 5px; margin-top: 10px; }
+        .alphabet-filter { display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; margin: 10px 0; }
+        .alphabet-filter button { padding: 8px 12px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background 0.3s; }
+        .alphabet-filter button:hover { background: #0056b3; }
+        .game-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; list-style: none; padding: 20px; margin: 0; overflow-y: auto; max-height: calc(100vh - 260px); background: #f8f9fa; }
+        .game-list li { background: #343a40; color: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); text-align: center; cursor: pointer; }
+        #game-frame { flex-grow: 1; border: none; width: 100%; display: none; }
+        #back-button { 
+            padding: 5px 10px; 
+            background: #dc3545; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            margin: 10px; 
+            cursor: pointer; 
+            display: none; 
+            width: fit-content; /* Компактная ширина */ 
+        }
+    </style>
+</head>
+<body>
+    <header id="catalog-header">Каталог игр</header>
+    <main>
+        <div id="game-catalog">
+            <div class="controls">
+                <div id="alphabet-filter" class="alphabet-filter"></div>
+                <input type="text" id="search" class="search-input" placeholder="Поиск игр...">
+            </div>
+            <div id="top-games">
+                <h3>Топ 5 игр</h3>
+                <ul id="top-game-list" class="game-list"></ul>
+            </div>
+            <ul id="game-list" class="game-list" style="display: none;"></ul>
+        </div>
+        <iframe id="game-frame"></iframe>
+        <button id="back-button">Назад к каталогу</button>
+    </main>
+    <script>
+        const games = [
+            { name: "1 On 1 Basketball", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-basketball.xml&container=ig" },
+            { name: "1 On 1 Football", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-football.xml&container=ig" },
+            { name: "1 On 1 Hockey", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-hockey.xml&container=ig" },
+            { name: "1 On 1 Soccer", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1 On 1 Soccer Brazil", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/f107b843-3661-4036-9397-2b0c6414a369%2F1on1-soccer-brazil.xml&container=ig" },
+            { name: "1 On 1 Tennis", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-tennis.xml&container=ig" },
+            { name: "1 Will Survive 2", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/f107b843-3661-4036-9397-2b0c6414a369%2F1_will_survive_2.xml&container=ig" },
+            { name: "1v1", url: "ifr?url=https://cdn.jsdelivr.net/gh/mind4ur/SourcePoint@main/Loader/pre.xml&container=ig" },
+            { name: "2 Player Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/8c491f21-7353-4f1f-b2a0-9544824c4d28%2F2-player-chess.xml&container=ig" },
+            { name: "2D World", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F2d-world.xml&container=ig" },
+            { name: "3 Little Heroes", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F3-little-heroes.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "1v1 Battle", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "2048", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Among Us", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Angry Birds", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Call of Duty", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Chess", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Space Invaders", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Tetris", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Pac-Man", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" },
+            { name: "Flappy Bird", url: "ifr?url=https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/1ee20621-61bc-4ec8-a8ec-5e839c2e6edc%2F1-on-1-soccer.xml&container=ig" }
+        ];
+        const gameList = document.getElementById('game-list');
+        const topGameList = document.getElementById('top-game-list');
+        const searchInput = document.getElementById('search');
+        const alphabetFilter = document.getElementById('alphabet-filter');
+        const gameCatalog = document.getElementById('game-catalog');
+        const gameFrame = document.getElementById('game-frame');
+        const backButton = document.getElementById('back-button');
+        const catalogHeader = document.getElementById('catalog-header');
+
+        function displayTopGames() {
+            topGameList.innerHTML = games.slice(0, 5).map(game => `<li data-url="${game.url}" data-name="${game.name}">${game.name}</li>`).join('');
+        }
+
+        function displayGames(filter = '') {
+            const gamesToDisplay = games.filter(game => filter === '1-9' ? /^[1-9]/.test(game.name) : game.name.toLowerCase().startsWith(filter.toLowerCase()));
+            gameList.innerHTML = gamesToDisplay.map(game => `<li data-url="${game.url}" data-name="${game.name}">${game.name}</li>`).join('');
+            gameList.style.display = 'grid';
+            document.getElementById('top-games').style.display = 'none';
+        }
+
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase();
+            gameList.innerHTML = games.filter(game => game.name.toLowerCase().includes(query))
+                .map(game => `<li data-url="${game.url}" data-name="${game.name}">${game.name}</li>`).join('');
+            gameList.style.display = 'grid';
+            document.getElementById('top-games').style.display = 'none';
+        });
+
+        gameList.addEventListener('click', event => {
+            if (event.target.tagName === 'LI') {
+                const url = event.target.getAttribute('data-url');
+                gameFrame.src = url;
+                gameFrame.style.display = 'block';
+                backButton.style.display = 'inline-block'; // Компактное отображение
+                gameCatalog.style.display = 'none';
+                catalogHeader.textContent = event.target.getAttribute('data-name');
+            }
+        });
+
+        topGameList.addEventListener('click', event => {
+            if (event.target.tagName === 'LI') {
+                const url = event.target.getAttribute('data-url');
+                gameFrame.src = url;
+                gameFrame.style.display = 'block';
+                backButton.style.display = 'inline-block'; // Компактное отображение
+                gameCatalog.style.display = 'none';
+                catalogHeader.textContent = event.target.getAttribute('data-name');
+            }
+        });
+
+        backButton.addEventListener('click', () => {
+            gameFrame.style.display = 'none';
+            backButton.style.display = 'none';
+            gameCatalog.style.display = 'block';
+            catalogHeader.textContent = 'Каталог игр';
+            gameList.style.display = 'none';
+            document.getElementById('top-games').style.display = 'block';
+        });
+
+        const button1to9 = document.createElement('button');
+        button1to9.textContent = '1-9';
+        button1to9.onclick = () => displayGames('1-9');
+        alphabetFilter.appendChild(button1to9);
+
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(char => {
+            const button = document.createElement('button');
+            button.textContent = char;
+            button.onclick = () => displayGames(char);
+            alphabetFilter.appendChild(button);
+        });
+
+        displayTopGames();
+    </script>
+</body>
+</html>
+
+]]></Content>
+</Module>
