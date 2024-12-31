@@ -3,8 +3,8 @@
  * @version 1.0.0
  */
 
-import config from '../resources/config.js';
-import resources from '../resources/resources.js';
+import config from 'https://cdn.jsdelivr.net/gh/nbjrkzddz/zxcvbnm@42109a8e1cd488444f66869807cfb27b8e14f43f/games/burgerandfrights/js/resources/config.js';
+import resources from 'https://cdn.jsdelivr.net/gh/nbjrkzddz/zxcvbnm@42109a8e1cd488444f66869807cfb27b8e14f43f/games/burgerandfrights/js/resources/resources.js';
 
 export default class AudioSystem {
     static _init() {
