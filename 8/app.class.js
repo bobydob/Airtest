@@ -4,7 +4,7 @@
  */
 
 import AudioSystem from 'https://cdn.jsdelivr.net/gh/bobydob/Airtest@eea0023038683062c1d51176c6e28daa8b742c8d/8/audiosystem.class.js';
-import ImageManager from 'https://cdn.jsdelivr.net/gh/bobydob/Airtest@master/8/imagemanager.class.js';
+import ImageManager from 'https://cdn.jsdelivr.net/gh/bobydob/Airtest@c2064d0f8ad3ebceb130a95977e183ff85a5563f/8/imagemanager.class.js';
 import Input from 'https://cdn.jsdelivr.net/gh/nbjrkzddz/zxcvbnm@42109a8e1cd488444f66869807cfb27b8e14f43f/games/burgerandfrights/js/framework/input.class.js';
 import ModelManager from 'https://cdn.jsdelivr.net/gh/nbjrkzddz/zxcvbnm@42109a8e1cd488444f66869807cfb27b8e14f43f/games/burgerandfrights/js/framework/modelmanager.class.js';
 import Time from 'https://cdn.jsdelivr.net/gh/nbjrkzddz/zxcvbnm@42109a8e1cd488444f66869807cfb27b8e14f43f/games/burgerandfrights/js/framework/time.class.js';
