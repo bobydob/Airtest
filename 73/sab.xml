@@ -54,17 +54,7 @@
             d.parentNode.insertBefore(e, d);
         }
     })(document, "script", "gamemonetize-sdk")})();
-
-(function(){window.console = {
-    log: function () {},
-    warn: function () {},
-    error: function () {},
-    info: function () {},
-    debug: function () {},
-    trace: function () {},
-    table: function () {},
-    assert: function () {},
-}})();		
+	
 		
 		
                 const hideFullScreenButton = "";
